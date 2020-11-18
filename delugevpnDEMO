@@ -1,25 +1,41 @@
 #!/bin/bash
 ############# https://github.com/plexguide/PlexGuide.com/graphs/contributors ###
-nameoftheapp () {                # name must match file; make sure it's unique
+delugevpn () {                # name must match file; make sure it's unique
 
 container_reset                  # do not delete this
 # VARIABLES ####################################################################
-pgrole="nameoftheapp"            # name this of the exact file name
-image="imagename/imagename"      # image nameto pull
-port_inside01="75000"            # port for inside container
-port_outside01="75000"           # port for outside container / how accessed
-traefik_extport="75000"          # how traefik reaches the external port
+pgrole="delugevpn"            # name this of the exact file name
+image="binhex/arch-delugevpn"      # image nameto pull
+port_inside01="8112"            # port for inside container
+port_outside01="8112"           # port for outside container / how accessed
+port_inside02="58846"            # port for inside container
+port_outside02="58846"           # port for outside container / how accessed
+port_inside03="58946"            # port for inside container
+port_outside03="58946"           # port for outside container / how accessed
+port_inside04="8118"            # port for inside container
+port_outside04="8118"           # port for outside container / how accessed
+traefik_extport="8112"          # how traefik reaches the external port
 
 # PATHS ########################################################################
 # 1st - path on your server # 2nd - path of the container
+
+common_fcreate_silent /pg/complete/nzbget
+common_fcreate_silent /pg/incomplete/nzbget
+common_fcreate_silent /pg/nzb/$pgrole
+common_fcreate_silent /pg/scripts/$pgrole
+
 container_path /pg /pg
+container_path /pg/unity /pg/unity
 container_path /pg/data/$pgrole /config/$pgrole
+container_path /var/run/docker.sock /var/run/docker.sock
 container_path /etc/localtime /etc/localtime:ro
 
 # PERMISSIONS ##################################################################
 # pay attention, to exactly what's required for permissions
 container_permissions GUID 1000
 container_permissions PGID 1000
+container_permissions LC_ALL C
+container_permissions GIDLIST 1000
 
 # CONTAINER EXTRA ENVS #########################################################
 # Not required, but an example is placed below incase; delete # to use
@@ -28,8 +44,7 @@ container_permissions PGID 1000
 # IMAGES EXPORT - 1ST IS DEFAULT ###############################################
 # how users select an image; the 1st image is the default. If only 1, it's ok!
 cat <<- EOF > "/pg/images/$pgrole.images"
-linuxserver/nzbget:latest
-linuxserver/nzbget:testing
+binhex/arch-delugevpn:latest
 EOF
 
 # YML EXPORT ###################################################################
