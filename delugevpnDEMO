@@ -19,23 +19,15 @@ traefik_extport="8112"          # how traefik reaches the external port
 # PATHS ########################################################################
 # 1st - path on your server # 2nd - path of the container
 
-common_fcreate_silent /pg/complete/nzbget
-common_fcreate_silent /pg/incomplete/nzbget
-common_fcreate_silent /pg/nzb/$pgrole
-common_fcreate_silent /pg/scripts/$pgrole
-
 container_path /pg /pg
 container_path /pg/unity /pg/unity
 container_path /pg/data/$pgrole /config/$pgrole
-container_path /var/run/docker.sock /var/run/docker.sock
 container_path /etc/localtime /etc/localtime:ro
 
 # PERMISSIONS ##################################################################
 # pay attention, to exactly what's required for permissions
 container_permissions GUID 1000
 container_permissions PGID 1000
-container_permissions LC_ALL C
-container_permissions GIDLIST 1000
 
 # CONTAINER EXTRA ENVS #########################################################
 # Not required, but an example is placed below incase; delete # to use
@@ -44,6 +36,7 @@ container_permissions GIDLIST 1000
 # IMAGES EXPORT - 1ST IS DEFAULT ###############################################
 # how users select an image; the 1st image is the default. If only 1, it's ok!
 cat <<- EOF > "/pg/images/$pgrole.images"
+binhex/arch-delugevpn:latest
 binhex/arch-delugevpn:latest
 EOF
 
